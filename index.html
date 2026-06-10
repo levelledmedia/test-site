@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Site</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&family=Readex+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style id="dark-mode-init">
+    html.dark-mode-init .card,
+    html.dark-mode-init .form-input,
+    html.dark-mode-init .btn--ghost-light {
+      background: #0A0A0A !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+      color: #F1F5F9 !important;
+    }
+    html.dark-mode-init .btn--ghost-light {
+      background: transparent !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      color: #fff !important;
+    }
+    html.dark-mode-init .header {
+      background: #0A0A0A !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+  </style>
+  <script>
+    // Apply default theme mode immediately before page renders to prevent flash
+    (function() {
+      const defaultTheme = 'light';
+      const businessName = 'Test Site';
+      const storageKey = 'siteTheme_' + businessName.replace(/[^a-zA-Z0-9]/g, '_');
+
+      // Check if this is a preview - if so, allow localStorage for testing
+      // Previews are served from /websites/ path on localhost
+      const isPreview = window.location.pathname.includes('/websites/');
+
+      // Decide which mode to use
+      // When defaultTheme is 'color': base is color-mode, toggle switches to dark-mode (no white/light mode)
+      // When defaultTheme is 'dark': base is dark-mode
+      // When defaultTheme is 'light': base is light (no class)
+      let activeMode = defaultTheme; // 'light', 'dark', or 'color'
+
+      // Only use localStorage for previews (local testing)
+      // Deployed sites always use the configured default theme
+      if (isPreview) {
+        const savedMode = localStorage.getItem(storageKey);
+        if (savedMode !== null) {
+          activeMode = savedMode;
+        } else {
+          localStorage.setItem(storageKey, activeMode);
+        }
+      }
+
+      // Apply mode classes
+      if (activeMode === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+        document.documentElement.classList.add('dark-mode-init');
+      } else if (activeMode === 'color') {
+        document.documentElement.classList.add('color-mode');
+      }
+
+      // Sync body classes when available
+      if (activeMode === 'dark' || activeMode === 'color') {
+        const applyBodyClass = () => {
+          if (activeMode === 'dark') document.body.classList.add('dark-mode');
+          if (activeMode === 'color') document.body.classList.add('color-mode');
+        };
+        if (document.body) {
+          applyBodyClass();
+        } else {
+          document.addEventListener('DOMContentLoaded', applyBodyClass);
+        }
+      }
+    })();
+  </script>
+</head>
+<body class="">
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <!-- Top Bar with Logo and CTA -->
+    <div class="header__top">
+      <div class="container">
+        <div class="header__content">
+          <div class="header__logo">
+            <span class="header__wordmark">Test Site</span>
+          </div>
+          <div class="header__right">
+            <div class="header__social">
+            </div>
+            <a href="tel:" class="btn btn--primary btn--sm header__call-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              
+            </a>
+            <button class="header__hamburger" id="mobileMenuToggle" aria-label="Toggle menu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="header__nav-bar">
+      <div class="container">
+        <div class="header__nav-container">
+          <nav class="header__nav">
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#why">Why Us</a>
+            <a href="#work-carousel">Our Work</a>
+            <a href="#reviews-carousel">Reviews</a>
+            <a href="#areas">Areas</a>
+            <a href="#faq">FAQ</a>
+            <a href="#quote">Contact</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="header__mobile-menu" id="mobileMenu">
+      <nav class="header__mobile-nav">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#why">Why Us</a>
+        <a href="#work-carousel">Our Work</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#areas">Areas</a>
+        <a href="#faq">FAQ</a>
+        <a href="#quote">Contact</a>
+        <a href="tel:" class="btn btn--primary btn--full">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          Call 
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero__bg">
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop" alt="Test Site" class="hero__image">
+      <div class="hero__overlay"></div>
+    </div>
+    <div class="container">
+      <div class="hero__content">
+        <div class="hero__text">
+          <h1 class="h1"></h1>
+          <p class="hero__tagline"></p>
+          <div class="hero__buttons">
+            <a href="tel:" class="btn btn--primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              Call Us Now
+            </a>
+            <a href="#quote" class="btn btn--ghost-light"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid stats-grid--three">
+        <div class="stat-item">
+          <div class="stat-item__icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="stat-item__content">
+            <div class="stat-item__number"></div>
+            <div class="stat-item__label"></div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item__icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <div class="stat-item__content">
+            <div class="stat-item__number"></div>
+            <div class="stat-item__label"></div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item__icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <div class="stat-item__content">
+            <div class="stat-item__number"></div>
+            <div class="stat-item__label"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us -->
+  <section class="section section--light" id="about">
+    <div class="container">
+      <div class="split">
+        <div class="split__media split__media--tall">
+          <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=700&fit=crop" alt="Test Site" class="img">
+        </div>
+        <div class="split__content">
+          <h2 class="h-eyebrow">ABOUT US</h2>
+          <h2 class="h2"></h2>
+          <p class="paragraph multiline"></p>
+          <p class="paragraph multiline"></p>
+          <div class="button-group">
+            <a href="tel:" class="btn btn--primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              
+            </a>
+            <a href="#quote" class="btn btn--ghost"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section section--services" id="services">
+    <div class="container">
+      <div class="section__header">
+        <div>
+          <p class="h-eyebrow">WHAT WE DO</p>
+          <h2 class="h2"></h2>
+        </div>
+      </div>
+      <div class="services-carousel services-layout--grid" data-grid-max-rows="1">
+        <div class="services-carousel-track" id="servicesTrack">
+        </div>
+      </div>
+      <div class="services-grid-toggle" id="servicesGridToggleWrap" hidden>
+        <button class="btn btn--ghost services-grid-toggle__btn" id="servicesGridToggleBtn" type="button">Show all services</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="section section--light" id="why">
+    <div class="container">
+      <div class="split split--reverse">
+        <div class="split__media split__media--tall">
+          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&h=700&fit=crop" alt="" class="img">
+        </div>
+        <div class="split__content">
+          <h2 class="h-eyebrow">WHY CHOOSE US</h2>
+          <h2 class="h2"></h2>
+          <p class="lead multiline"></p>
+          <ul class="list-check">
+          </ul>
+          <div class="button-group">
+            <a href="tel:" class="btn btn--primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              
+            </a>
+            <a href="#quote" class="btn btn--ghost"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Past Projects - Carousel Version -->
+  <section class="section section--portfolio" id="work-carousel">
+    <div class="container">
+      <div class="section__header">
+        <div>
+          <p class="h-eyebrow">SEE OUR WORK</p>
+          <h2 class="h2"></h2>
+        </div>
+        <div class="portfolio-nav">
+          <button class="portfolio-nav-btn portfolio-nav-btn--prev" id="portfolioPrev">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button class="portfolio-nav-btn portfolio-nav-btn--next" id="portfolioNext">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-carousel-wrapper">
+      <div class="portfolio-carousel">
+        <div class="portfolio-carousel-track" id="portfolioTrack">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox__close" id="lightboxClose">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <img src="" alt="" class="lightbox__image" id="lightboxImage">
+    <video class="lightbox__video" id="lightboxVideo" controls></video>
+  </div>
+
+  <!-- Before/After Transformation -->
+
+  <!-- CTA Banner -->
+  <section class="cta cta-pattern">
+    <div class="cta__grid">
+      <div class="cta__image-col">
+        <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=600&fit=crop" alt="Professional at work" class="cta__image">
+      </div>
+      <div class="cta__content-wrapper">
+        <div class="cta__content-col">
+          <h3 class="cta__title">
+          </h3>
+          <p class="cta__description"></p>
+          <div class="button-group">
+            <a href="tel:" class="btn btn--primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              
+            </a>
+            <a href="#quote" class="btn btn--ghost-light"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner - Centered Version -->
+  <section class="cta cta--centered">
+    <div class="container">
+      <div class="cta__content-centered">
+        <h3 class="cta__title"></h3>
+        <p class="cta__description"></p>
+        <div class="button-group">
+          <a href="tel:" class="btn btn--primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            
+          </a>
+          <a href="#quote" class="btn btn--ghost-light"></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Carousel -->
+  <section class="section section--light-alt" id="reviews-carousel">
+    <div class="container">
+      <div class="section__header">
+        <div>
+          <p class="h-eyebrow">TESTIMONIALS</p>
+          <h2 class="h2"></h2>
+        </div>
+        <div class="testimonial-nav">
+          <button class="testimonial-nav-btn testimonial-nav-btn--prev" id="testimonialPrev">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button class="testimonial-nav-btn testimonial-nav-btn--next" id="testimonialNext">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-carousel-wrapper">
+      <div class="testimonial-carousel">
+        <div class="testimonial-carousel-track" id="testimonialTrack">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Location Map -->
+  <section class="section section--light section--location" id="areas">
+    <div class="container">
+      <div class="split">
+        <div class="split__content">
+          <p class="h-eyebrow">LOCATION</p>
+          <h2 class="h2"></h2>
+          <p class="lead multiline"></p>
+          <div class="coverage-areas">
+            <div class="coverage-column">
+            </div>
+            <div class="coverage-column">
+            </div>
+          </div>
+          <div class="button-group">
+            <a href="tel:" class="btn btn--primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              
+            </a>
+            <a href="#quote" class="btn btn--ghost"></a>
+          </div>
+        </div>
+        <div class="split__media split__media--map">
+          <div class="map-container">
+            <iframe
+              src=""
+              width="100%"
+              height="100%"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Test Site Location Map">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section section--light" id="faq">
+    <div class="container">
+      <div class="section__header section__header--center">
+        <div>
+          <p class="h-eyebrow">Frequently Asked Questions</p>
+          <h2 class="h2">The Answers You Need</h2>
+        </div>
+      </div>
+      <div class="faq-container">
+      </div>
+    </div>
+  </section>
+
+  <!-- Pre-Footer Section -->
+  <section class="section section--prefooter" id="quote">
+    <div class="container">
+      <div class="section__header section__header--center">
+        <div>
+          <p class="h-eyebrow"></p>
+          <h2 class="h2"></h2>
+          <p class="section__description"></p>
+        </div>
+      </div>
+      <form class="quote-form" id="quoteForm" action="https://levelled-form-handler.vercel.app/api/submit" method="POST">
+        <input type="hidden" name="client_id" value="">
+        <input type="hidden" name="business_name" value="Test Site">
+        <input type="hidden" name="form_timestamp" id="formTimestamp">
+        <div class="hp-trap" aria-hidden="true">
+          <label for="company-field">Company</label>
+          <input type="text" id="company-field" name="company" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="form-row">
+          <input type="text" name="name" placeholder="Full name" class="form-input" required>
+          <input type="text" name="postcode" placeholder="Postcode" class="form-input" required>
+        </div>
+        <div class="form-row">
+          <input type="email" name="email" placeholder="Email address" class="form-input" required>
+          <input type="tel" name="phone" placeholder="Phone number" class="form-input" required>
+        </div>
+        <textarea name="message" placeholder="Briefly describe your project" class="form-input form-textarea" maxlength="1000" required></textarea>
+        <button type="submit" class="btn btn--primary btn--full"></button>
+        <div class="form-message" id="formMessage"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__content">
+        <div class="footer__col footer__col--logo">
+          <div class="footer__logo">
+              <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 4L8 12V28H24V12L16 4Z" fill="#1E6F57"/>
+                <path d="M16 4C16 4 20 8 20 12C20 14 18.5 16 16 16C13.5 16 12 14 12 12C12 8 16 4 16 4Z" fill="#22C08A"/>
+              </svg>
+              <span class="footer__wordmark">Test Site</span>
+          </div>
+          <p class="footer__tagline"></p>
+        </div>
+        <div class="footer__col footer__col--links">
+          <h4 class="footer__heading">Links</h4>
+          <ul class="footer__links footer__links--split">
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#why">Why Us</a></li>
+            <li><a href="#work-carousel">Our Work</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#areas">Areas</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer__col footer__col--contact">
+          <h4 class="footer__heading">Contact</h4>
+          <ul class="footer__links">
+            <li></li>
+            <li><strong>Phone:</strong> </li>
+          </ul>
+          <div class="footer__social">
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>© 2026 Test Site. All rights reserved. | <a href="#" id="privacyPolicyLink">Privacy Policy</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Privacy Policy Modal -->
+  <div class="privacy-modal" id="privacyModal">
+    <div class="privacy-modal__overlay"></div>
+    <div class="privacy-modal__content">
+      <button class="privacy-modal__close" id="privacyModalClose">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <h2 class="privacy-modal__title">Privacy Policy</h2>
+      <div class="privacy-modal__body">
+        <p><strong>Effective Date:</strong> June 2026</p>
+
+        <h3>Information We Collect</h3>
+        <p>When you submit our quote form, we collect the following personal information:</p>
+        <ul>
+          <li>Your name</li>
+          <li>Email address</li>
+          <li>Phone number</li>
+          <li>Postcode</li>
+          <li>Project details you provide</li>
+        </ul>
+
+        <h3>How We Use Your Information</h3>
+        <p>We use the information you provide to:</p>
+        <ul>
+          <li>Respond to your quote request</li>
+          <li>Contact you regarding our services</li>
+          <li>Provide you with the information you requested</li>
+        </ul>
+
+        <h3>Data Security</h3>
+        <p>We take appropriate measures to protect your personal information from unauthorized access, alteration, or disclosure.</p>
+
+        <h3>Your Rights</h3>
+        <p>You have the right to request access to, correction of, or deletion of your personal information. To exercise these rights, please contact us using the contact information provided on this website.</p>
+
+        <h3>Contact Us</h3>
+        <p>If you have any questions about this Privacy Policy, please contact us at:</p>
+        <p><strong>Test Site</strong><br>
+        Email: <br>
+        Phone: </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+  <!-- WhatsApp Widget -->
+</body>
+</html>
